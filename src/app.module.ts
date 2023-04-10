@@ -54,8 +54,6 @@ import { AuthModule } from './auth/auth.module';
       privateKey: process.env.PRIVATE_KEY,
     }),
     UsersModule,
-    CommonModule,
-    AuthModule,
   ],
   controllers: [],
   providers: [],
