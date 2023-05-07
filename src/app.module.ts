@@ -47,7 +47,8 @@ import { MailModule } from './mail/mail.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: true,
-      logging: true,
+      logging:
+        process.env.MODE_ENV !== 'prod' && process.env.MODE_ENV !== 'test',
       entities: [User, Verification],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
