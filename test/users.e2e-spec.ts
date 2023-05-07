@@ -5,6 +5,12 @@ import { AppModule } from '../src/app.module';
 import { DataSource, getConnection } from 'typeorm';
 import { doTypesOverlap } from 'graphql';
 
+jest.mock('got', () => {
+  return {
+    post: jest.fn(),
+  };
+});
+
 const GRAPHQL_ENDPOINT = '/graphql';
 
 describe('UserModule (e2e)', () => {
@@ -60,7 +66,31 @@ describe('UserModule (e2e)', () => {
         });
     });
 
-    it.todo('should fail if account already exists');
+    it('should fail if account already exists', () => {
+      return request(app.getHttpServer())
+        .post(GRAPHQL_ENDPOINT)
+        .send({
+          query: `
+          mutation {
+            createAccount(input: {
+              email: "${EMAIL}",
+              password: "111",
+              role: Owner
+              }) {
+                ok
+                error
+                }
+                }
+                `,
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body.data.createAccount.ok).toBe(false);
+          expect(res.body.data.createAccount.error).toBe(
+            'There is a user with that email already',
+          );
+        });
+    });
   });
 
   it.todo('userProfile');
