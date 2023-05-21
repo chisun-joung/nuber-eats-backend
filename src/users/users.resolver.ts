@@ -30,9 +30,13 @@ export class UserResolver {
   }
 
   @Query((returns) => User)
-  @UseGuards(AuthGuard)
-  me(@AuthUser() authUser: User) {
-    return authUser;
+  me(@Context() context) {
+    if (!context.user) {
+      return;
+    } else {
+      console.log(context.user);
+      return context.user;
+    }
   }
 
   @Query((returns) => UserProfileOutput)
